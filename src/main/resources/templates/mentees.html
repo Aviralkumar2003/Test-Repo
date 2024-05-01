@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mentors</title>
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        table {
+            font-size: 14px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#mentorTable').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        }
+                    },
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        }
+                    }, {
+                        text: 'Logout',
+                        className: 'logout-button',
+                        action: function () {
+                            window.location.href = '/logout';
+                        }
+                    }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    ['10', '25', '50', 'All']
+                ],
+
+                "language": {
+                    "paginate": {
+                        "previous": "Previous",
+                        "next": "Next"
+                    },
+                    "buttons": {
+                        "copy": "Copy",
+                        "excel": "Excel",
+                        "csv": "CSV",
+                        "pdf": "PDF",
+                        "print": "Print"
+                    }
+                }
+            });
+        });
+    </script>
+
+
+</head>
+
+<body>
+    <h2>Mentors</h2>
+    <table border="1" id="mentorTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Organisation</th>
+                <th>Expertise</th>
+                <th>Experience</th>
+                <th>LinkedIn Profile</th>
+                <th>Pan Card Number</th>
+                <th>Bank Name</th>
+                <th>Branch Address</th>
+                <th>Account Number</th>
+                <th>IFSC Code</th>
+                <th>PAN Card Photo</th>
+                <th>Cheque Photo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="mentor : ${mentors}">
+                <td th:text="${mentor.name}"></td>
+                <td th:text="${mentor.email}"></td>
+                <td th:text="${mentor.contact}"></td>
+                <td th:text="${mentor.organisation}"></td>
+                <td th:text="${mentor.expertise}"></td>
+                <td th:text="${mentor.experience}"></td>
+                <td th:text="${mentor.linkedInUsername}"></td>
+                <td th:text="${mentor.panCardNumber}"></td>
+                <td th:text="${mentor.bankDetails.bankName}"></td>
+                <td th:text="${mentor.bankDetails.branchAddress}"></td>
+                <td th:text="${mentor.bankDetails.accountNumber}"></td>
+                <td th:text="${mentor.bankDetails.ifscCode}"></td>
+                <td>
+                    <a th:href="'data:image/jpeg;base64,' + ${imgUtil.getImgData(mentor.bankProof.panCardPhoto)}">
+                        PAN Card Photo
+                    </a>
+                </td>
+                <td>
+                    <a th:href="'data:image/jpeg;base64,' + ${imgUtil.getImgData(mentor.bankProof.chequePhoto)}">
+                        Cheque Photo
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
